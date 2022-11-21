@@ -1,24 +1,55 @@
-async function loadData(query, latLng, radius) {
-    // the second parameter of axios.get is a configuration object
-    // in the configuration object we can set the query string parameters
-    // via the 'params' key
-    const response = await axios.get("https://api.foursquare.com/v3/places/search", {
-        params: {
-            query: query,
-            ll: latLng,
-            v: '20210903',  // indicate which version of FourSquare to use
-            radius: radius
-        },
-        headers:{
-            Accept: 'application/json',
-            Authorization:'fsq3wsVh3XbICcgWtobQCeG2CT41ct8V9NIVPvTLADIg70A='
-        }
-    });
-    return response.data;
-}
+
 
 async function main() {
-    const results = await loadData("chicken rice", "1.3061,103.8832", 1000);
-    console.log(results);
+    // call the init function
+    init();
+ 
+    // it is possible to define function inside another function
+    function init() {
+        let map = initMap();
+
+        // add the search results maker to a LayerGroup
+        // for easier management, and so that we can toggle it on/off
+        const resultLayer = L.layerGroup();
+        resultLayer.addTo(map);
+        
+        document.querySelector("#search-btn").addEventListener("click", async function(){
+
+            // remove all existing markers from search
+            resultLayer.clearLayers();
+
+            const searchTerms = document.querySelector("#search-terms").value;
+            const center = map.getBounds().getCenter();
+            const ll = center.lat + "," + center.lng;
+            const results = await loadData(searchTerms, ll, 2000);
+ 
+            for (let r of results.results) {
+                const lat = r.geocodes.main.latitude;
+                const lng = r.geocodes.main.longitude;
+                const marker = L.marker([lat,lng]);
+                marker.addTo(resultLayer);
+                marker.bindPopup(r.name);
+            }
+        });
+    }
 }
+
+function initMap() {
+    const centerPoint = [1.3521, 103.8198];
+    const map = L.map("map");
+    map.setView(centerPoint, 14);
+
+    // create the tile layer
+    const tileLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw' //demo access token
+    });
+    tileLayer.addTo(map);
+    return map;
+}
+
 main();

@@ -1,0 +1,18 @@
+#map {
+    height: 100vh;
+}
+
+#map-container {
+    /* usee position:relative so that we can absolutely
+      position the search container by coordinates inside div#map-container */
+    position: relative;
+}
+
+#search-container {
+    position: absolute;
+    top: 25px;
+    left:60px;
+    z-index: 314159;
+    background-color: rgba(255,255,255, 0.5);
+    padding: 20px;
+}
