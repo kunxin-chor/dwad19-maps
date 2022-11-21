@@ -28,7 +28,31 @@ async function main() {
                 const lng = r.geocodes.main.longitude;
                 const marker = L.marker([lat,lng]);
                 marker.addTo(resultLayer);
-                marker.bindPopup(r.name);
+                marker.bindPopup(function(){
+                    let div = document.createElement('div');
+                    div.innerHTML = `<h1>${r.name}</h1>
+                                <button class="btn">Click me</button>
+                    `;
+                    div.querySelector(".btn").addEventListener("click", function(){
+                        alert(r.name);
+                    })
+
+                    return div;
+                });
+
+                // display the search result under the search box
+
+                // create a new element to store the result
+                let resultElement = document.createElement('div');
+                resultElement.innerHTML = r.name;
+                resultElement.classList.add("search-result-entry");
+
+                document.querySelector("#search-results").appendChild(resultElement);
+                resultElement.addEventListener("click", function(){
+                   map.flyTo([lat,lng]);
+                   marker.openPopup();
+                })
+
             }
         });
     }

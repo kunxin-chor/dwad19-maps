@@ -15,4 +15,16 @@
     z-index: 314159;
     background-color: rgba(255,255,255, 0.5);
     padding: 20px;
+
+}
+
+#search-results {
+    overflow-y: scroll;
+    max-height: 400px;
+}
+
+.search-result-entry {
+    padding: 5px;
+    margin-top:5px;
+    margin-bottom:5px;
 }

@@ -7,7 +7,8 @@ async function loadData(query, latLng, radius) {
             query: query,
             ll: latLng,
             v: '20210903',  // indicate which version of FourSquare to use
-            radius: radius
+            radius: radius,
+            limit: 50
         },
         headers:{
             Accept: 'application/json',
