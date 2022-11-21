@@ -1,19 +1,24 @@
-async function loadData() {
+async function loadData(query, latLng, radius) {
     // the second parameter of axios.get is a configuration object
     // in the configuration object we can set the query string parameters
     // via the 'params' key
     const response = await axios.get("https://api.foursquare.com/v3/places/search", {
         params: {
-            query: "sushi",
-            near: "Singapore",
-            v: '20210903'
+            query: query,
+            ll: latLng,
+            v: '20210903',  // indicate which version of FourSquare to use
+            radius: radius
         },
         headers:{
             Accept: 'application/json',
             Authorization:'fsq3wsVh3XbICcgWtobQCeG2CT41ct8V9NIVPvTLADIg70A='
         }
     });
-    console.log(response.data);
+    return response.data;
 }
 
-loadData();
+async function main() {
+    const results = await loadData("chicken rice", "1.3061,103.8832", 1000);
+    console.log(results);
+}
+main();
