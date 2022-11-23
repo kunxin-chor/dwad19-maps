@@ -55,6 +55,19 @@ async function main() {
 
             }
         });
+
+        document.querySelector("#toggle-search-btn").addEventListener("click", function(){
+            let searchContainer = document.querySelector("#search-container");
+            // check if the search container is visible
+            if (!searchContainer.style.display || searchContainer.style.display=='none') {
+                // if not, then cause it to appear
+                // since the <div> is a block level element
+                // there when we display it we set 'style.display' to be 'block'
+                searchContainer.style.display="block"; 
+            } else {
+                searchContainer.style.display="none";
+            }
+        })
     }
 }
 
